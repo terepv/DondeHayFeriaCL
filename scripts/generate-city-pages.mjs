@@ -16,6 +16,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const GEOJSON_PATH = join(__dirname, '..', 'public', 'data', 'Ferias_de_Chile.geojson');
 const PUBLIC_DIR = join(__dirname, '..', 'public');
 const BASE_URL = 'https://dondehayferia.cl';
+const GA_MEASUREMENT_ID = 'G-4RK7CPRL2Z';
 
 function escapeHtml(s) {
   if (s == null) return '';
@@ -113,6 +114,15 @@ function buildCityPage(comuna, slug, ferias) {
 
     <script type="application/ld+json">${JSON.stringify(itemList)}</script>
 
+    <!-- Google Analytics (GA4) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', '${GA_MEASUREMENT_ID}');
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet" />
@@ -196,6 +206,14 @@ function main() {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="canonical" href="${BASE_URL}/ferias/" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <!-- Google Analytics (GA4) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', '${GA_MEASUREMENT_ID}');
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet" />
