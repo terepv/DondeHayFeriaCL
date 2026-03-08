@@ -1,0 +1,23 @@
+{"sessionId":"9b42db","location":"MapView.tsx:FlyToSelected","message":"programmatic popup opened","data":{"geometryType":"LineString","hasDirectionsLink":true},"timestamp":1772914956504,"hypothesisId":"H2"}
+{"sessionId":"9b42db","location":"MapView.tsx:line-click","message":"line clicked","data":{"name":"Feria Roberto Espinoza","geometryType":"LineString"},"timestamp":1772915027944,"hypothesisId":"H1"}
+{"sessionId":"9b42db","location":"MapView.tsx:line-click","message":"line clicked","data":{"name":"Los Quincheros","geometryType":"LineString"},"timestamp":1772915093121,"hypothesisId":"H1"}
+{"sessionId":"9b42db","location":"MapView.tsx:FlyToSelected","message":"programmatic popup opened","data":{"geometryType":"LineString","hasDirectionsLink":true},"timestamp":1772915093131,"hypothesisId":"H2"}
+{"sessionId":"9b42db","location":"MapView.tsx:line-click","message":"line clicked","data":{"name":"Feria Ortuzar","geometryType":"LineString"},"timestamp":1772915102669,"hypothesisId":"H1"}
+{"sessionId":"9b42db","location":"MapView.tsx:FlyToSelected","message":"programmatic popup opened","data":{"geometryType":"LineString","hasDirectionsLink":true},"timestamp":1772915102677,"hypothesisId":"H2"}
+{"sessionId":"9b42db","location":"MapView.tsx:line-click","message":"line clicked","data":{"name":"Feria Ortuzar","geometryType":"LineString"},"timestamp":1772915104513,"hypothesisId":"H1"}
+{"sessionId":"9b42db","location":"MapView.tsx:FlyToSelected","message":"programmatic popup opened","data":{"geometryType":"LineString","hasDirectionsLink":true},"timestamp":1772915162424,"hypothesisId":"H2"}
+{"sessionId":"9b42db","location":"MapView.tsx:FlyToSelected","message":"programmatic popup opened","data":{"geometryType":"LineString","hasDirectionsLink":true},"timestamp":1772915164990,"hypothesisId":"H2"}
+{"sessionId":"9b42db","location":"MapView.tsx:line-click","message":"line clicked","data":{"name":"Feria 10 de julio","geometryType":"LineString"},"timestamp":1772915266730,"hypothesisId":"H1"}
+{"sessionId":"9b42db","location":"MapView.tsx:FlyToSelected","message":"programmatic popup opened","data":{"geometryType":"LineString","hasDirectionsLink":true},"timestamp":1772915266743,"hypothesisId":"H2"}
+{"sessionId":"9b42db","location":"MapView.tsx:line-click","message":"line clicked","data":{"name":"Feria 10 de julio","geometryType":"LineString"},"timestamp":1772915269956,"hypothesisId":"H1"}
+{"sessionId":"9b42db","location":"MapView.tsx:line-click","message":"line clicked","data":{"name":"Feria 10 de julio","geometryType":"LineString"},"timestamp":1772915272386,"hypothesisId":"H1"}
+{"sessionId":"9b42db","location":"MapView.tsx:line-click","message":"line clicked","data":{"name":"Feria 10 de julio","geometryType":"LineString"},"timestamp":1772915273397,"hypothesisId":"H1"}
+{"sessionId":"9b42db","location":"MapView.tsx:line-click","message":"line clicked","data":{"name":"Feria 10 de julio","geometryType":"LineString"},"timestamp":1772915274648,"hypothesisId":"H1"}
+{"sessionId":"9b42db","location":"MapView.tsx:line-click","message":"line clicked","data":{"name":"Feria 10 de julio","geometryType":"LineString"},"timestamp":1772915276876,"hypothesisId":"H1"}
+{"sessionId":"9b42db","location":"MapView.tsx:line-click","message":"line clicked","data":{"name":"Feria 10 de julio","geometryType":"LineString"},"timestamp":1772915279068,"hypothesisId":"H1"}
+{"sessionId":"9b42db","location":"MapView.tsx:line-click","message":"line clicked","data":{"name":"Feria Lo Marcoleta","geometryType":"LineString"},"timestamp":1772915309484,"hypothesisId":"H1"}
+{"sessionId":"9b42db","location":"MapView.tsx:FlyToSelected","message":"programmatic popup opened","data":{"geometryType":"LineString","hasDirectionsLink":true},"timestamp":1772915309495,"hypothesisId":"H2"}
+{"sessionId":"9b42db","location":"MapView.tsx:line-click","message":"line clicked","data":{"name":"Feria Lo Marcoleta","geometryType":"LineString"},"timestamp":1772915315578,"hypothesisId":"H1"}
+{"sessionId":"9b42db","location":"MapView.tsx:line-click","message":"line clicked","data":{"name":"Feria Lo Marcoleta","geometryType":"LineString"},"timestamp":1772915317338,"hypothesisId":"H1"}
+{"sessionId":"9b42db","location":"MapView.tsx:FlyToSelected","message":"programmatic popup opened","data":{"geometryType":"LineString","hasDirectionsLink":true},"timestamp":1772915330389,"hypothesisId":"H2"}
+{"sessionId":"9b42db","location":"MapView.tsx:FlyToSelected","message":"programmatic popup opened","data":{"geometryType":"LineString","hasDirectionsLink":true},"timestamp":1772915331154,"hypothesisId":"H2"}
