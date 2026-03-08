@@ -175,9 +175,11 @@ export const App: React.FC = () => {
       },
       (err) => {
         console.error(err);
-        setGeoError(
-          err.message || 'No se pudo obtener tu ubicación. Inténtalo de nuevo.'
-        );
+        if (err.code !== 1) {
+          setGeoError(
+            err.message || 'No se pudo obtener tu ubicación. Inténtalo de nuevo.'
+          );
+        }
         setIsLocating(false);
       },
       {
@@ -302,7 +304,7 @@ export const App: React.FC = () => {
             </section>
 
             <section className="flex-1 flex flex-col md:flex-row gap-4 min-h-[60vh]">
-              <div className="hidden md:flex flex-none w-max max-w-sm min-h-0 rounded-lg overflow-hidden shadow bg-white dark:bg-slate-800 order-first">
+              <div className="hidden md:flex flex-none w-max max-w-sm min-h-0 rounded-lg overflow-visible shadow bg-white dark:bg-slate-800 order-first">
                 <MarketList
                   markets={visibleInMapMarkets}
                   getFeatureId={getFeatureId}

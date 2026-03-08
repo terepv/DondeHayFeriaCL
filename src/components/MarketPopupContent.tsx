@@ -18,7 +18,7 @@ export const MarketPopupContent: React.FC<MarketPopupContentProps> = ({ feature 
   const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${center.lat},${center.lng}`;
 
   return (
-    <div className="text-slate-900 dark:text-slate-100 min-w-[160px]">
+    <div className="text-slate-900 dark:text-slate-100 w-max min-w-0 max-w-[280px] break-words">
       <h3 className="text-base font-semibold mb-1 flex flex-wrap items-center gap-x-2 gap-y-0">
         <span>{name}</span>
         <span

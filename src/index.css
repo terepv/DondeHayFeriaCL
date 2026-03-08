@@ -14,6 +14,22 @@
   height: 100%;
 }
 
+/* Popup card: wrapper and content size to inner content (override Leaflet inline width) */
+.leaflet-popup {
+  width: fit-content;
+}
+.leaflet-popup-content-wrapper {
+  width: fit-content !important;
+  min-width: fit-content;
+  max-width: min(90vw, 320px);
+}
+.leaflet-popup-content {
+  margin: 8px 12px;
+  width: fit-content !important;
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
 /* Dark mode: map popups and controls match theme (no flashbang) */
 .dark .leaflet-popup-content-wrapper {
   background: #1e293b;

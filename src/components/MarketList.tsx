@@ -80,18 +80,16 @@ export const MarketList: React.FC<MarketListProps> = ({
               onMouseDown={(e) => e.stopPropagation()}
             >
               <span
-                className="inline-flex items-center justify-center w-2.5 h-2.5 rounded-full border border-slate-400 dark:border-slate-500 text-slate-500 dark:text-slate-400 text-[7px] font-semibold cursor-help select-none"
+                className="inline-flex items-center justify-center w-3 h-3 rounded-full border border-slate-400 dark:border-slate-500 text-slate-500 dark:text-slate-400 text-[8px] font-semibold cursor-help select-none"
                 aria-label="Información sobre geolocalización"
               >
                 i
               </span>
               <span
                 role="tooltip"
-                className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1 rounded bg-slate-800 dark:bg-slate-700 text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 shadow max-w-[200px] whitespace-normal text-left"
+                className="absolute bottom-full right-0 mb-1 px-2 py-1 rounded bg-slate-800 dark:bg-slate-700 text-white text-sm whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 shadow"
               >
-                {hasUserLocation
-                  ? 'Ubicación detectada. La lista se ordena por distancia.'
-                  : 'La geolocalización es opcional. Puedes explorar todas las ferias sin ella.'}
+                Puedes explorar el mapa sin activarla.
               </span>
             </span>
           </span>
