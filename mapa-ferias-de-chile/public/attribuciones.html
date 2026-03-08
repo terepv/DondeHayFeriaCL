@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Atribuciones y créditos | DóndeHayFeria.cl</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
+    <style>
+      :root { --bg: #f8fafc; --text: #0f172a; --muted: #475569; --border: #e2e8f0; --link: #047857; }
+      @media (prefers-color-scheme: dark) {
+        :root { --bg: #020617; --text: #f1f5f9; --muted: #94a3b8; --border: #334155; --link: #34d399; }
+      }
+      * { box-sizing: border-box; }
+      body { font-family: "Atkinson Hyperlegible", sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; margin: 0; padding: 1.5rem; }
+      .wrap { max-width: 42rem; margin: 0 auto; }
+      h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+      p.lead { color: var(--muted); margin-top: 0; margin-bottom: 2rem; }
+      a { color: var(--link); }
+      a:hover { text-decoration: underline; }
+      section { margin-bottom: 2rem; }
+      section h2 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+      ul { margin: 0; padding-left: 1.25rem; }
+      li { margin-bottom: 0.25rem; }
+      .logo-link { display: inline-flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem; text-decoration: none; color: var(--text); font-weight: 600; }
+      .logo-link:hover { color: var(--link); }
+      .logo-link img { height: 2.5rem; width: 2.5rem; object-fit: contain; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <a href="/" class="logo-link">
+        <img src="/images/logo.png" alt="" />
+        Volver al mapa
+      </a>
+      <h1>Atribuciones y créditos</h1>
+      <p class="lead">Este proyecto es de uso no comercial. A continuación se listan las fuentes y licencias de los recursos utilizados.</p>
+
+      <section>
+        <h2>Mapas y cartografía</h2>
+        <ul>
+          <li><strong>Leaflet</strong> — Biblioteca JavaScript para mapas interactivos. Licencia <a href="https://opensource.org/licenses/BSD-2-Clause" target="_blank" rel="noopener noreferrer">BSD-2-Clause</a>. <a href="https://leafletjs.com/" target="_blank" rel="noopener noreferrer">leafletjs.com</a></li>
+          <li><strong>OpenStreetMap</strong> — Capa de mapa (tiles). © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors. Uso sujeto a la <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">política de uso de tiles de OSM</a>.</li>
+          <li><strong>CARTO</strong> — Capa de mapa en modo oscuro (Dark Matter). © <a href="https://carto.com/attributions" target="_blank" rel="noopener noreferrer">CARTO</a>. <a href="https://carto.com/attributions" target="_blank" rel="noopener noreferrer">Atribuciones CARTO</a>.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Datos</h2>
+        <ul>
+          <li><strong>Ferias de Chile</strong> — Datos de ferias libres (GeoJSON) utilizados en esta aplicación. Origen y licencia según la fuente de los datos que alimentan <code>Ferias_de_Chile.geojson</code>.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Iconos e imágenes</h2>
+        <ul>
+          <li><strong>Marcadores del mapa</strong> — Iconos de marcador por defecto de Leaflet (incluidos en el proyecto en <code>/images/</code>).</li>
+          <li><strong>Logo</strong> — Logo del sitio (logo.png). Propiedad del proyecto.</li>
+        </ul>
+      </section>
+
+      <p class="lead" style="margin-top: 2rem; font-size: 0.875rem;">
+        Si eres titular de algún recurso aquí utilizado y deseas que se ajuste la atribución o se retire, contacta al responsable del proyecto.
+      </p>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,142 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: "Atkinson Hyperlegible", sans-serif;
+  }
+}
+
+/* Map container should fill its parent */
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+}
+
+/* Dark mode: map popups and controls match theme (no flashbang) */
+.dark .leaflet-popup-content-wrapper {
+  background: #1e293b;
+  color: #e2e8f0;
+  border: 1px solid #334155;
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.4);
+}
+.dark .leaflet-popup-tip {
+  background: #1e293b;
+}
+.dark .leaflet-container a.leaflet-popup-close-button {
+  color: #94a3b8;
+}
+.dark .leaflet-container a.leaflet-popup-close-button:hover {
+  color: #e2e8f0;
+}
+.dark .leaflet-popup.selected-feature-popup .leaflet-popup-content p,
+.dark .leaflet-popup.selected-feature-popup .leaflet-popup-content strong {
+  color: #e2e8f0 !important;
+}
+.dark .leaflet-control-zoom {
+  border: 1px solid #334155 !important;
+}
+.dark .leaflet-control-zoom a {
+  background: #1e293b !important;
+  color: #e2e8f0 !important;
+  border-bottom: 1px solid #334155 !important;
+}
+.dark .leaflet-control-zoom a:hover {
+  background: #334155 !important;
+}
+.dark .leaflet-control-attribution {
+  background: rgba(30, 41, 59, 0.9) !important;
+  color: #94a3b8;
+}
+.dark .leaflet-control-attribution a {
+  color: #94a3b8;
+}
+.dark .leaflet-control-attribution a:hover {
+  color: #e2e8f0;
+}
+
+/* Dark mode: default marker pin brighter on dark tiles */
+.dark .leaflet-marker-icon {
+  filter: brightness(1.2) contrast(1.1);
+}
+
+/* Hide unclustered market pins (and their shadows): the polyline is the real representation; only cluster circles and lines should show. */
+.leaflet-marker-pane > img.leaflet-marker-icon.market-marker {
+  display: none;
+}
+.leaflet-shadow-pane > img.market-marker {
+  display: none;
+}
+
+/* Marker clusters (light mode): purple circle, cream number for accessibility */
+.marker-cluster-small,
+.marker-cluster-small div,
+.marker-cluster-medium,
+.marker-cluster-medium div,
+.marker-cluster-large,
+.marker-cluster-large div {
+  background-color: #81559b !important;
+  color: #ede7d6;
+}
+.marker-cluster span {
+  font-weight: 600;
+  color: #ede7d6;
+}
+
+/* Dark mode: marker clusters – darker fills and light text for contrast */
+.dark .marker-cluster-small,
+.dark .marker-cluster-small div {
+  background-color: rgba(6, 95, 70, 0.85) !important;
+  color: #f0fdf4;
+}
+.dark .marker-cluster-medium,
+.dark .marker-cluster-medium div {
+  background-color: rgba(5, 46, 22, 0.9) !important;
+  color: #f0fdf4;
+}
+.dark .marker-cluster-large,
+.dark .marker-cluster-large div {
+  background-color: rgba(4, 120, 87, 0.9) !important;
+  color: #f0fdf4;
+}
+.dark .marker-cluster span {
+  color: inherit;
+  font-weight: 600;
+}
+
+/* Improve focus visibility globally */
+:focus-visible {
+  outline: 2px solid #047857;
+  outline-offset: 2px;
+}
+.dark :focus-visible {
+  outline-color: #34d399;
+}
+
+/* Filter selects: custom chevron inset from the right edge */
+.select-chevron-inset {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1.15em 1.15em;
+}
+.dark .select-chevron-inset {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+}
+
+/* Skip link for keyboard users */
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: 8px;
+  background-color: #047857;
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  z-index: 50;
+}
+.skip-link:focus-visible {
+  left: 8px;
+}
