@@ -6,7 +6,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "npm run generate:seo && vite build",
+    "generate:seo": "node scripts/generate-city-pages.mjs && node scripts/generate-sitemap.mjs",
+    "generate:city-pages": "node scripts/generate-city-pages.mjs",
+    "generate:sitemap": "node scripts/generate-sitemap.mjs",
     "preview": "vite preview",
     "lint": "eslint .",
     "enrich-geojson": "node scripts/enrich-geojson.mjs",
