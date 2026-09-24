@@ -19,14 +19,9 @@ import 'leaflet-textpath';
 import { useTheme } from '../context/ThemeContext';
 import { MarketPopupContent } from './MarketPopupContent';
 
-const LIGHT_TILES = {
+const OSM_TILES = {
   url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-};
-
-const DARK_TILES = {
-  url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
 };
 
 interface MapViewProps {
@@ -237,7 +232,6 @@ export const MapView: React.FC<MapViewProps> = ({
 }) => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
-  const tiles = isDark ? DARK_TILES : LIGHT_TILES;
 
   return (
     <MapContainer
@@ -249,7 +243,7 @@ export const MapView: React.FC<MapViewProps> = ({
       aria-label="Mapa de ferias"
       aria-describedby="map-description"
     >
-      <TileLayer attribution={tiles.attribution} url={tiles.url} />
+      <TileLayer attribution={OSM_TILES.attribution} url={OSM_TILES.url} />
 
       {markets.length > 0 && <MapAutoFit markets={markets} />}
       {onBoundsChange && <MapBoundsReporter onBoundsChange={onBoundsChange} />}

@@ -26,7 +26,7 @@ export const Footer: React.FC = () => {
           </a>
         </div>
         <p className="text-xs text-slate-500 dark:text-slate-500">
-          Uso no comercial. Mapas © OpenStreetMap, Leaflet, CARTO.
+          Uso no comercial. Mapas © OpenStreetMap, Leaflet.
         </p>
       </div>
     </footer>
