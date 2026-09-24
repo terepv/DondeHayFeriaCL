@@ -30,6 +30,12 @@
   overflow-wrap: break-word;
 }
 
+/* Dark mode recolors the same OpenStreetMap tiles. CARTO's dark basemap now
+   paints an "API key required" watermark unless a key is sent. */
+.dark .leaflet-tile-pane {
+  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}
+
 /* Dark mode: map popups and controls match theme (no flashbang) */
 .dark .leaflet-popup-content-wrapper {
   background: #1e293b;
