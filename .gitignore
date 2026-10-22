@@ -19,13 +19,16 @@ dist-ssr
 .env
 .env.local
 .env.*.local
-!.env.example
 
 # Build / cache
 *.tsbuildinfo
 .vite
 .cache
 coverage
+
+# Local data preparation and review artifacts
+__pycache__/
+/outputs/
 
 # OS
 .DS_Store

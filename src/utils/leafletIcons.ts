@@ -19,6 +19,21 @@ export function setupLeafletIcons(): void {
 }
 
 let _marketMarkerIcon: L.Icon | null = null;
+let _marketPointIcon: L.DivIcon | null = null;
+
+/** Match the colour and thickness of the market street lines. */
+export function getMarketPointIcon(): L.DivIcon {
+  if (!_marketPointIcon) {
+    _marketPointIcon = L.divIcon({
+      className: 'market-point-marker',
+      html: '<span class="market-point" aria-hidden="true"></span>',
+      iconSize: [24, 24],
+      iconAnchor: [12, 12],
+      popupAnchor: [0, -6]
+    });
+  }
+  return _marketPointIcon;
+}
 
 /** Default pin icon with class so we can hide unclustered market pins (polyline is the real representation). */
 export function getMarketMarkerIcon(): L.Icon {

@@ -29,6 +29,9 @@
   min-width: 0;
   overflow-wrap: break-word;
 }
+.leaflet-container .leaflet-popup-content p {
+  margin: 4px 0;
+}
 
 /* Dark mode recolors the same OpenStreetMap tiles. CARTO's dark basemap now
    paints an "API key required" watermark unless a key is sent. */
@@ -83,12 +86,39 @@
   filter: brightness(1.2) contrast(1.1);
 }
 
-/* Hide unclustered market pins (and their shadows): the polyline is the real representation; only cluster circles and lines should show. */
+/* Route markers only support clustering; their visible representation is the line. */
 .leaflet-marker-pane > img.leaflet-marker-icon.market-marker {
   display: none;
 }
 .leaflet-shadow-pane > img.market-marker {
   display: none;
+}
+
+/* Point locations use the same visual treatment as market street lines. */
+.market-point-marker {
+  background: transparent;
+  border: 0;
+}
+.market-point {
+  display: block;
+  width: 10px;
+  height: 10px;
+  margin: 7px;
+  border-radius: 50%;
+  background: #047857;
+  opacity: 0.8;
+}
+.dark .market-point {
+  background: #34d399;
+  opacity: 0.95;
+}
+.market-point-marker:focus-visible {
+  outline: 3px solid #0f172a;
+  outline-offset: 4px;
+  border-radius: 50%;
+}
+.dark .market-point-marker:focus-visible {
+  outline-color: #f8fafc;
 }
 
 /* Marker clusters (light mode): purple circle, cream number for accessibility */

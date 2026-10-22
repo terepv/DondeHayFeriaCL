@@ -1,9 +1,7 @@
 import type { MarketFeature, MarketFeatureCollection } from '../types/market';
 import type { Feature } from 'geojson';
-import { isSupabaseConfigured } from '../lib/supabase';
-import { loadMarketsFromSupabase } from './marketsApi';
 
-// Centralized loader so swapping data source is easy
+// The map and generated city pages share this single dataset.
 const DATA_URL = '/data/Ferias_de_Chile.geojson';
 
 /** Keep Point and LineString as-is; ensure properties.name exists. */
@@ -26,7 +24,7 @@ function toMarketFeature(f: Feature): MarketFeature | null {
   };
 }
 
-export async function loadMarketsFromFile(): Promise<MarketFeatureCollection> {
+export async function loadMarkets(): Promise<MarketFeatureCollection> {
   const response = await fetch(DATA_URL);
 
   if (!response.ok) {
@@ -49,12 +47,4 @@ export async function loadMarketsFromFile(): Promise<MarketFeatureCollection> {
     .filter((f): f is MarketFeature => f != null);
 
   return { type: 'FeatureCollection', features };
-}
-
-/** Load from Supabase if configured, otherwise from static GeoJSON file. */
-export async function loadMarkets(): Promise<MarketFeatureCollection> {
-  if (isSupabaseConfigured()) {
-    return loadMarketsFromSupabase();
-  }
-  return loadMarketsFromFile();
 }

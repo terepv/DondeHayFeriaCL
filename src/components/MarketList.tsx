@@ -4,7 +4,8 @@ import type { MarketFeature } from '../types/market';
 import type { LatLng } from '../utils/distance';
 import { distanceInKm } from '../utils/distance';
 import { getFeatureCenter } from '../utils/geometry';
-import { getName, getRegion, getCommune, getDays, getHorario, getAddress } from '../utils/marketUtils';
+import { getName, getRegion, getCommune, getDays, getHorario, getAddress, getInformationText, isReferenceLocation } from '../utils/marketUtils';
+import { MarketLocationNote } from './MarketLocationNote';
 
 const PAGE_SIZE = 6;
 
@@ -148,16 +149,17 @@ export const MarketList: React.FC<MarketListProps> = ({
                 {address && (
                   <p className="text-sm text-slate-600 dark:text-slate-400 mt-0.5">{address}</p>
                 )}
-                {days && (
+                {(days || isReferenceLocation(feature)) && (
                   <p className="text-sm text-slate-600 dark:text-slate-400 mt-0.5">
-                    <span className="font-medium">Días:</span> {days}
+                    <span className="font-medium">Días:</span> {getInformationText(days)}
                   </p>
                 )}
-                {horario && (
+                {(horario || isReferenceLocation(feature)) && (
                   <p className="text-sm text-slate-600 dark:text-slate-400 mt-0.5">
-                    <span className="font-medium">Horario:</span> {horario}
+                    <span className="font-medium">Horario:</span> {getInformationText(horario)}
                   </p>
                 )}
+                <MarketLocationNote feature={feature} />
                 {distanceLabel && (
                   <p className="text-sm text-slate-600 dark:text-slate-400 mt-0.5">
                     {distanceLabel}
