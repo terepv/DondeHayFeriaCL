@@ -12,7 +12,8 @@ import {
 import type { MarketFeature } from '../types/market';
 import type { LatLng } from '../utils/distance';
 import { getFeatureCenter, getFeaturePositions, getAllPointsForBounds } from '../utils/geometry';
-import { getMarketMarkerIcon } from '../utils/leafletIcons';
+import { getMarketMarkerIcon, getMarketPointIcon } from '../utils/leafletIcons';
+import { getName, isReferenceLocation } from '../utils/marketUtils';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
 import L from 'leaflet';
 import 'leaflet-textpath';
@@ -206,8 +207,14 @@ const FlyToSelected: React.FC<{ selectedMarket: MarketFeature | null }> = ({ sel
       .setContent(container);
     popupRef.current = popup;
     popup.openOn(map);
+    // Re-measure after React renders the content and the map finishes moving.
+    const updatePopup = () => popup.update();
+    const frame = requestAnimationFrame(updatePopup);
+    map.once('moveend', updatePopup);
 
     return () => {
+      cancelAnimationFrame(frame);
+      map.off('moveend', updatePopup);
       if (popupRootRef.current) {
         popupRootRef.current.unmount();
         popupRootRef.current = null;
@@ -305,11 +312,13 @@ export const MapView: React.FC<MapViewProps> = ({
         {markets.map((feature, index) => {
           const center = getFeatureCenter(feature);
           const id = getFeatureId(feature, index);
+          const reference = isReferenceLocation(feature);
           return (
             <Marker
               key={id}
               position={[center.lat, center.lng]}
-              icon={getMarketMarkerIcon()}
+              icon={reference ? getMarketPointIcon() : getMarketMarkerIcon()}
+              title={getName(feature)}
               eventHandlers={{
                 click: () => onSelectMarket(feature, index)
               }}

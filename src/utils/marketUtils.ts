@@ -1,5 +1,21 @@
 import type { MarketFeature } from '../types/market';
 
+export const REFERENCE_LOCATION_DESCRIPTION =
+  'El punto indica la ubicación informada. No contamos con el tramo exacto de la feria.';
+
+export function isReferenceLocation(feature: MarketFeature): boolean {
+  return feature.geometry.type === 'Point';
+}
+
+/** Present unavailable source details without implying a future update. */
+export function getInformationText(value: string): string {
+  const text = value.trim();
+  const normalized = text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  return !normalized || /^(?:0|-+|s\/?[ind]|sin (?:datos|informacion)|no (?:definido|disponible|informado))\.?$/.test(normalized)
+    ? 'Información no disponible.'
+    : text;
+}
+
 // --- Feature identity ---
 
 export function getFeatureId(feature: MarketFeature, index: number): string {

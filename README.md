@@ -6,7 +6,7 @@ Interactive web application to explore ferias (markets) on a map using a GeoJSON
 
 ### License
 
-This project (code and data) is licensed under **CC BY 4.0** (Creative Commons Attribution 4.0). You may reuse and adapt it for any purpose, including commercial use. You must give **appropriate credit**, provide a link to the [license](https://creativecommons.org/licenses/by/4.0/), and indicate if you made changes.
+This project's code and original data are licensed under **CC BY 4.0** (Creative Commons Attribution 4.0). Street geometry derived from OpenStreetMap is attributed separately to [OpenStreetMap contributors](https://www.openstreetmap.org/copyright) under ODbL 1.0; see each feature's `geometry_source`. You must give appropriate credit, link the applicable license, and indicate changes.
 
 **Example attribution:**  
 *“Mapa Ferias de Chile data and/or code, [repository or project URL], used under CC BY 4.0.”*
@@ -32,7 +32,7 @@ npm install
 
 #### 2. Run locally (static GeoJSON)
 
-Place your GeoJSON at `public/data/Ferias_de_Chile.geojson` and run:
+The map reads `public/data/Ferias_de_Chile.geojson`. To run it locally:
 
 ```bash
 npm run dev
@@ -40,19 +40,18 @@ npm run dev
 
 ---
 
-### Loading data from Supabase (optional)
+### Market data
 
-You can load markets from **Supabase** (free tier) instead of a static file. The app will read from the database when configured.
+`public/data/Ferias_de_Chile.geojson` is the single source of truth for map locations and generated city pages. Edit this file to update markets; no database or environment configuration overrides it. Import exports, backups, and research caches are not part of the dataset or committed to the repo.
 
-#### 1. Create a Supabase project
+The dataset contains 1,298 locations: 556 street routes (`LineString`) and 742 reported locations (`Point`). Coordinates use GeoJSON order: longitude, latitude. Both use the same green map styling. Point cards explain that the exact street extent is unavailable.
 
-- Go to [supabase.com](https://supabase.com) and create a project (free tier).
-- In the Dashboard, open **SQL Editor** and run the script in `supabase/schema.sql`. This creates the `markets` table and policies.
+Properties include `name`, `comuna`, `region`, `Días`, `Horario`, and an optional `address`. Imported records retain compact source references and street names; raw spreadsheet rows and route-debug evidence are kept outside the repo. The reference-location card explanation is shared in the UI rather than repeated in every feature.
 
-#### 2. Configure the app
+Before committing data changes, run:
 
-- Copy `.env.example` to `.env`.
-- Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` from your project (**Settings → API**).
-- Restart the dev server (`npm run dev`).
+```bash
+npm run validate:data
+```
 
-The map loads from Supabase when these env vars are set; otherwise it uses the static GeoJSON file. No custom backend server is required.
+The normal build generates city pages and the sitemap from the same GeoJSON.

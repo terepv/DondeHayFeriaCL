@@ -1,7 +1,8 @@
 import React from 'react';
 import type { MarketFeature } from '../types/market';
 import { getFeatureCenter } from '../utils/geometry';
-import { getName, getRegion, getCommune, getDays, getHorario, getAddress } from '../utils/marketUtils';
+import { getName, getRegion, getCommune, getDays, getHorario, getAddress, getInformationText, isReferenceLocation } from '../utils/marketUtils';
+import { MarketLocationNote } from './MarketLocationNote';
 
 interface MarketPopupContentProps {
   feature: MarketFeature;
@@ -54,16 +55,17 @@ export const MarketPopupContent: React.FC<MarketPopupContentProps> = ({ feature 
           )}
         </p>
       )}
-      {days && (
+      {(days || isReferenceLocation(feature)) && (
         <p className="text-sm text-slate-700 dark:text-slate-300">
-          <span className="font-medium">Días:</span> {days}
+          <span className="font-medium">Días:</span> {getInformationText(days)}
         </p>
       )}
-      {horario && (
+      {(horario || isReferenceLocation(feature)) && (
         <p className="text-sm text-slate-700 dark:text-slate-300">
-          <span className="font-medium">Horario:</span> {horario}
+          <span className="font-medium">Horario:</span> {getInformationText(horario)}
         </p>
       )}
+      <MarketLocationNote feature={feature} />
     </div>
   );
 };
