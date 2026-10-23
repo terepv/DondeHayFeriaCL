@@ -7,8 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="canonical" href="https://dondehayferia.cl/" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" href="/images/favicon.png" />
+    <link rel="apple-touch-icon" href="/images/favicon.png" />
+    <link rel="stylesheet" href="/seo.css" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
@@ -44,7 +45,28 @@
     <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Chewy&display=swap" rel="stylesheet" />
   </head>
   <body class="h-full">
-    <div id="root" class="h-full"></div>
+    <div id="root" class="h-full">
+      <!-- home-content:start -->
+      <section class="home-fallback" aria-label="Encuentra tu feria">
+<h1 id="filters-heading">Ferias libres de Chile: ubicaciones, días y horarios</h1>
+      </section>
+      <noscript><p class="home-fallback">El mapa necesita JavaScript. Puedes consultar el directorio por comuna al pie de esta página.</p></noscript>
+      <footer class="site-footer">
+<p>Encuentra ferias por comuna y día en el mapa, o consulta sus direcciones y horarios informados en el <a href="/ferias/">directorio de ferias por comuna</a>.</p>
+<nav aria-label="Comunas destacadas">
+  <a href="/ferias-en-santiago/">Santiago</a> ·
+  <a href="/ferias-en-nunoa/">Ñuñoa</a> ·
+  <a href="/ferias-en-maipu/">Maipú</a> ·
+  <a href="/ferias-en-rancagua/">Rancagua</a>
+</nav>
+<p class="footer-note">Los horarios son informados y pueden cambiar por feriados.</p>
+<div class="footer-credits">
+  <a href="/attribuciones.html" class="footer-source-link"><img src="/images/logo.png" alt="" width="32" height="32" />Fuentes, cobertura y créditos</a>
+  <p>Uso no comercial. Mapas © OpenStreetMap, Leaflet.</p>
+</div>
+      </footer>
+      <!-- home-content:end -->
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

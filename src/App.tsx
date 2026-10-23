@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { clsx } from 'clsx';
+import { useSearchParams } from 'react-router-dom';
 import { loadMarkets } from './utils/geojsonLoader';
 import type { MarketFeature } from './types/market';
 import { distanceInKm, type LatLng } from './utils/distance';
@@ -22,14 +23,15 @@ import { MapView } from './components/MapView';
 import { MarketList } from './components/MarketList';
 
 export const App: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [markets, setMarkets] = useState<MarketFeature[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
 
-  const [selectedMarketId, setSelectedMarketId] = useState<string | null>(null);
+  const [selectedMarketId, setSelectedMarketId] = useState<string | null>(searchParams.get('feria'));
 
   const [selectedRegion, setSelectedRegion] = useState<string>('all');
-  const [selectedCommune, setSelectedCommune] = useState<string>('all');
+  const [selectedCommune, setSelectedCommune] = useState<string>(searchParams.get('comuna') || 'all');
   const [selectedDias, setSelectedDias] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
 
@@ -37,6 +39,22 @@ export const App: React.FC = () => {
   const [isLocating, setIsLocating] = useState<boolean>(false);
   const [geoError, setGeoError] = useState<string | null>(null);
   const [mapBounds, setMapBounds] = useState<MapBounds | null>(null);
+
+  // Restore the location when following directory links or browser back/forward.
+  useEffect(() => {
+    setSelectedCommune(searchParams.get('comuna') || 'all');
+    setSelectedMarketId(searchParams.get('feria'));
+  }, [searchParams]);
+
+  const handleCommuneChange = (comuna: string) => {
+    const next = new URLSearchParams(searchParams);
+    if (comuna === 'all') next.delete('comuna');
+    else next.set('comuna', comuna);
+    next.delete('feria');
+    setSelectedCommune(comuna);
+    setSelectedMarketId(null);
+    setSearchParams(next, { replace: true });
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -231,11 +249,8 @@ export const App: React.FC = () => {
               <p className="text-lg font-semibold">No se pudieron cargar los datos de ferias.</p>
               <p className="mt-1 text-base">{loadError}</p>
               <p className="mt-2 text-base text-red-700 dark:text-red-300">
-                Comprueba que el archivo GeoJSON exista en{' '}
-                <code className="bg-red-100 dark:bg-red-900/50 px-1 rounded">
-                  public/data/Ferias_de_Chile.geojson
-                </code>{' '}
-                y que sea un GeoJSON válido.
+                Intenta recargar la página. También puedes consultar el{' '}
+                <a href="/ferias/" className="underline">directorio de ferias por comuna</a>.
               </p>
             </div>
           </div>
@@ -249,7 +264,7 @@ export const App: React.FC = () => {
               selectedCommune={selectedCommune}
               selectedDias={selectedDias}
               onRegionChange={setSelectedRegion}
-              onCommuneChange={setSelectedCommune}
+              onCommuneChange={handleCommuneChange}
               onDiasChange={setSelectedDias}
               searchTerm={searchTerm}
               onSearchTermChange={setSearchTerm}

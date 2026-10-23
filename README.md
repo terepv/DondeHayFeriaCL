@@ -55,3 +55,32 @@ npm run validate:data
 ```
 
 The normal build generates city pages and the sitemap from the same GeoJSON.
+
+Development also regenerates these pages before starting. A Vite middleware serves
+`/ferias/` and generated `/ferias-en-<comuna>/` URLs directly from their HTML files,
+matching production directory behavior. Run `npm run validate:routes` to check HTTP
+routing, including links without a trailing slash and URLs with query strings.
+
+### Search content and deployment checks
+
+`npm run build` validates the data, generates the homepage fallback, comuna pages,
+regional directory and sitemap, then checks the resulting `dist/` pages. Checks
+cover canonical URLs, coverage, visible addresses, map links, JSON-LD, local assets
+and anchor targets. To recheck an existing build, run `npm run validate:seo`.
+
+The preferred origin is `https://dondehayferia.cl`, defined for generated output in
+`scripts/seo-utils.mjs`. Keep the homepage and attribution canonical URLs aligned
+with it. Cloudflare handles the permanent www redirect separately.
+
+The filter-panel heading lives in `src/content/home-heading.html`, and the footer
+in `src/content/footer-content.html`. React renders these shared snippets, and
+`generate-homepage.mjs` embeds them into the initial HTML so visitors can reach
+the directory without JavaScript. Regenerate after editing either snippet.
+Generated HTML and the sitemap are tracked; include regenerated changes when
+updating the dataset or templates. The build creates all comuna pages from scratch
+in `dist/`; the SEO check flags obsolete public pages when coverage changes.
+
+Map links accept `/?comuna=Ñuñoa` and an optional `feria` parameter containing a
+feature ID. Sitemap modification dates are omitted until reliable per-page dates
+exist. Source years and publication dates must not be presented as recent schedule
+verification. Real-world data verification remains a separate editorial task.

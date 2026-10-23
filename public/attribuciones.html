@@ -4,6 +4,9 @@
     <meta charset="UTF-8" />
     <title>Atribuciones y créditos | DóndeHayFeria.cl</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Fuentes, metodología, cobertura y limitaciones de los datos de ferias libres de DóndeHayFeria. Licencias y créditos de mapas e imágenes." />
+    <link rel="canonical" href="https://dondehayferia.cl/attribuciones.html" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
@@ -46,18 +49,29 @@
       </section>
 
       <section>
-        <h2>Datos</h2>
+        <h2 id="datos">Datos</h2>
         <ul>
-          <li><strong>Ferias de Chile</strong> — Ubicaciones y datos de ferias provenientes de las planillas <code>Ferias_2022.xlsx</code> y <code>Ferias_Pais_PowerBI.xlsx</code>, junto con los registros originales del proyecto. La fuente se conserva en cada registro de <code>Ferias_de_Chile.geojson</code>.</li>
-          <li><strong>Tramos de calles</strong> — Geometría derivada de © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>, bajo <a href="https://opendatacommons.org/licenses/odbl/1-0/">ODbL 1.0</a>. Esta atribución corresponde también a los tramos del archivo GeoJSON, además del mapa de fondo.</li>
+          <li><strong>ODEPA — Localizador Nacional de Ferias Libres</strong> — Parte de los datos proviene del <a href="https://www.odepa.gob.cl/precios/consumidor/localizador-ferias-libres">localizador de ferias libres de la Oficina de Estudios y Políticas Agrarias</a>.</li>
+          <li><strong>Recopilación del proyecto</strong> — También se consultaron sitios web de distintas municipalidades y <a href="https://www.google.com/maps">Google Maps</a> para recopilar ubicaciones. No todos los registros conservan el enlace específico de origen; en esos casos no atribuimos la ficha a una institución concreta.</li>
+          <li><strong>Catastro de ferias libres de 2022</strong> — Algunos registros conservan ese año de referencia, pero todavía no tienen documentado un enlace público a la fuente original.</li>
+          <li><strong>Tramos de calles</strong> — Geometría derivada de © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>, bajo <a href="https://opendatacommons.org/licenses/odbl/1-0/">ODbL 1.0</a>. Esta atribución corresponde tanto a los tramos de ferias como al mapa de fondo.</li>
         </ul>
+      </section>
+
+      <section id="metodologia">
+        <h2>Cómo leer estos datos</h2>
+        <p>El mapa y el directorio por comuna se construyen con los mismos registros. Cada ficha identifica su fuente y enlaza a la publicación original cuando esa referencia está documentada. La atribución no implica una verificación reciente de los horarios ni una relación oficial con la institución citada.</p>
+        <p>El año de una fuente corresponde al registro de origen, no a una fecha de verificación del horario actual. Publicar nuevamente una página tampoco confirma que sus datos sigan vigentes.</p>
+        <p>Los días y horarios son informados, no una confirmación de funcionamiento en tiempo real. Pueden existir cambios por feriados, traslados o decisiones municipales. Consulta con la municipalidad correspondiente antes de viajar.</p>
+        <p>Las líneas representan tramos de calles; los puntos son ubicaciones de referencia y no delimitan la extensión exacta de una feria. La cobertura depende de los datos disponibles: puede haber ferias que no estén incluidas y registros que correspondan a distintos tramos de una misma feria.</p>
+        <p><a href="/ferias/">Consultar ferias por comuna</a> · <a href="https://github.com/terepv/DondeHayFeriaCL/issues">Informar una corrección</a>. Para solicitar una corrección, indica comuna, nombre de la feria y una fuente pública que permita comprobar el cambio.</p>
       </section>
 
       <section>
         <h2>Iconos e imágenes</h2>
         <ul>
-          <li><strong>Marcadores del mapa</strong> — Iconos de marcador por defecto de Leaflet (incluidos en el proyecto en <code>/images/</code>).</li>
-          <li><strong>Logo</strong> — Logo del sitio (logo.png). Propiedad del proyecto.</li>
+          <li><strong>Marcadores del mapa</strong> — Iconos de marcador por defecto de Leaflet.</li>
+          <li><strong>Logo</strong> — Identidad visual del sitio. Propiedad del proyecto.</li>
         </ul>
       </section>
 

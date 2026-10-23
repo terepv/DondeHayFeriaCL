@@ -1,256 +1,92 @@
 #!/usr/bin/env node
-/**
- * Generates static HTML city pages from Ferias_de_Chile.geojson.
- * One page per comuna with natural-language list of ferias and SEO meta.
- * Output: public/ferias-en-<slug>/index.html
- *
- * Run from project root: node scripts/generate-city-pages.mjs
- */
+// Generate visible location information and matching structured data from the map dataset.
+import { mkdirSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+import {
+  PUBLIC_DIR, BASE_URL, escapeHtml as h, text, loadComunas, cityPath,
+  mapLink, breadcrumbs, documentHtml
+} from './seo-utils.mjs';
 
-import { readFileSync, mkdirSync, writeFileSync } from 'fs';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
-import { slugify } from './slugify.mjs';
+const comunas = loadComunas();
+const coverageNote = 'Los días y horarios corresponden a los registros disponibles; no confirman funcionamiento en tiempo real ni cambios por feriados. Consulta con la municipalidad antes de viajar.';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const GEOJSON_PATH = join(__dirname, '..', 'public', 'data', 'Ferias_de_Chile.geojson');
-const PUBLIC_DIR = join(__dirname, '..', 'public');
-const BASE_URL = 'https://dondehayferia.cl';
-const GA_MEASUREMENT_ID = 'G-4RK7CPRL2Z';
-
-function escapeHtml(s) {
-  if (s == null) return '';
-  const str = String(s);
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+function details(feature) {
+  const p = feature.properties ?? {};
+  const street = [p.street, p.street_start && `desde ${p.street_start}`, p.street_end && `hasta ${p.street_end}`].filter(Boolean).join(', ');
+  return {
+    name: String(p.name || 'Feria sin nombre').trim(),
+    address: text(p.address || street),
+    days: text(p.Días ?? p.days),
+    hours: text(p.Horario),
+    source: p.source ? String(p.source) : 'Recopilación del proyecto; referencia específica no registrada.',
+    sourceUrl: typeof p.source_url === 'string' && /^https:\/\//.test(p.source_url) ? p.source_url : null,
+    sourceYear: p.source_year ? ` (año de la fuente: ${p.source_year})` : ''
+  };
 }
-
-function getCommune(feature) {
-  const p = feature.properties || {};
-  const v = (p.comuna ?? p.commune) ?? '';
-  return typeof v === 'string' ? v.trim() : '';
-}
-
-function getName(feature) {
-  const p = feature.properties || {};
-  return (p.name && String(p.name).trim()) || 'Feria sin nombre';
-}
-
-function getDias(feature) {
-  const p = feature.properties || {};
-  return (p.Días ?? p.days ?? '').trim();
-}
-
-function getHorario(feature) {
-  const p = feature.properties || {};
-  return (p.Horario ?? '').trim();
-}
-
-function buildCityPage(comuna, slug, ferias) {
-  const title = `Ferias en ${comuna} – Dónde y cuándo | DóndeHayFeria`;
-  const description = `Lista de ${ferias.length} feria${ferias.length === 1 ? '' : 's'} libre${ferias.length === 1 ? '' : 's'} en ${comuna} con días y horarios. Ver mapa interactivo.`;
-  const url = `${BASE_URL}/ferias-en-${slug}/`;
-  const ogImage = `${BASE_URL}/og-default.png`;
-
-  // Natural language list: "Feria X: Días, Horario; Feria Y: ..."
-  const listItems = ferias.map((f) => {
-    const name = getName(f);
-    const dias = getDias(f);
-    const horario = getHorario(f);
-    const part = horario ? `${dias}, ${horario}` : dias;
-    return `${name}: ${part}`;
-  });
-  const listText = listItems.join('; ');
-  const listHtml = ferias
-    .map((f) => {
-      const name = escapeHtml(getName(f));
-      const dias = escapeHtml(getDias(f));
-      const horario = escapeHtml(getHorario(f));
-      const part = horario ? `${dias}, ${horario}` : dias;
-      return `<li><strong>${name}</strong>: ${part}</li>`;
-    })
-    .join('\n    ');
-
-  // JSON-LD ItemList for this page
+function buildCityPage(comuna, ferias) {
+  const path = cityPath(comuna);
+  const description = `Consulta ferias libres en ${comuna}: direcciones, días de funcionamiento y horarios informados. Encuentra cada ubicación en el mapa.`;
+  const region = String(ferias[0].properties?.region ?? '');
+  const records = ferias.map(feature => ({ feature, ...details(feature) }));
+  const cards = records.map(({ feature, name, address, days, hours, source, sourceUrl, sourceYear }) => `
+    <li class="market-card" id="feria-${h(feature.id)}">
+      <h2>${h(name)}</h2>
+      <dl>
+        <dt>Dirección informada</dt><dd>${h(address)}</dd>
+        <dt>Días informados</dt><dd>${h(days)}</dd>
+        <dt>Horario informado</dt><dd>${h(hours)}</dd>
+      </dl>
+      ${feature.geometry.type === 'Point' ? '<p class="muted">Ubicación de referencia: no contamos con el tramo exacto de esta feria.</p>' : ''}
+      <p class="muted">Fuente: ${sourceUrl ? `<a href="${h(sourceUrl)}">${h(source)}</a>` : h(source)}${h(sourceYear)}. <a href="/attribuciones.html#datos">Sobre estos datos</a>.</p>
+      <a class="cta" href="${h(mapLink(comuna, feature))}">Ver ${h(name)} en el mapa</a>
+    </li>`).join('\n');
+  const related = comunas.filter(([other, features]) => other !== comuna && features[0].properties?.region === region)
+    .slice(0, 6).map(([other]) => `<li><a href="${cityPath(other)}">Ferias en ${h(other)}</a></li>`).join('');
   const itemList = {
-    '@context': 'https://schema.org',
-    '@type': 'ItemList',
-    name: `Ferias libres en ${comuna}`,
-    description: description,
-    numberOfItems: ferias.length,
-    itemListElement: ferias.map((f, i) => ({
-      '@type': 'ListItem',
-      position: i + 1,
-      name: getName(f),
-      description: `Días: ${getDias(f)}. Horario: ${getHorario(f)}.`
+    '@context': 'https://schema.org', '@type': 'ItemList',
+    name: `Ferias libres en ${comuna}`, description, numberOfItems: records.length,
+    itemListElement: records.map(({ feature, name, address, days, hours }, index) => ({
+      '@type': 'ListItem', position: index + 1, name,
+      url: `${BASE_URL}${path}#feria-${feature.id}`,
+      description: `Dirección informada: ${address} Días informados: ${days}. Horario informado: ${hours}.`
     }))
   };
-
-  return `<!doctype html>
-<html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <title>${escapeHtml(title)}</title>
-    <meta name="description" content="${escapeHtml(description)}" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="canonical" href="${url}" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="${url}" />
-    <meta property="og:title" content="${escapeHtml(title)}" />
-    <meta property="og:description" content="${escapeHtml(description)}" />
-    <meta property="og:image" content="${ogImage}" />
-    <meta property="og:locale" content="es_CL" />
-    <meta property="og:site_name" content="DóndeHayFeria" />
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="${escapeHtml(title)}" />
-    <meta name="twitter:description" content="${escapeHtml(description)}" />
-    <meta name="twitter:image" content="${ogImage}" />
-
-    <script type="application/ld+json">${JSON.stringify(itemList)}</script>
-
-    <!-- Google Analytics (GA4) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', '${GA_MEASUREMENT_ID}');
-    </script>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet" />
-    <style>
-      * { box-sizing: border-box; }
-      body { font-family: 'Atkinson Hyperlegible', sans-serif; margin: 0; padding: 1rem 1.5rem; max-width: 48rem; margin-left: auto; margin-right: auto; line-height: 1.5; color: #1e293b; background: #EDE7D6; }
-      a { color: #0d9488; }
-      a:hover { text-decoration: underline; }
-      h1 { font-size: 1.5rem; margin-top: 0; }
-      ul { padding-left: 1.5rem; }
-      .nav { margin-bottom: 1.5rem; }
-      .cta { display: inline-block; margin-top: 1rem; padding: 0.5rem 1rem; background: #60867D; color: white; border-radius: 0.5rem; text-decoration: none; font-weight: 700; }
-      .cta:hover { background: #4d6b63; }
-    </style>
-  </head>
-  <body>
-    <nav class="nav" aria-label="Navegación">
-      <a href="/">Inicio</a> · <a href="/ferias/">Ferias por comuna</a>
-    </nav>
-    <main>
-      <h1>Ferias en ${escapeHtml(comuna)}</h1>
-      <p>En ${escapeHtml(comuna)} hay ${ferias.length} feria${ferias.length === 1 ? '' : 's'} libre${ferias.length === 1 ? '' : 's'}. A continuación la lista con días y horarios.</p>
-      <ul>
-    ${listHtml}
-      </ul>
-      <p><a href="/" class="cta">Ver todas en el mapa interactivo</a></p>
-    </main>
-    <footer style="margin-top: 2rem; font-size: 0.875rem; color: #64748b;">
-      <a href="/attribuciones.html">Atribuciones y créditos</a>
-    </footer>
-  </body>
-</html>
-`;
+  return documentHtml({
+    title: `Ferias libres en ${comuna}: días y direcciones | DóndeHayFeria`,
+    description, path,
+    structuredData: [itemList, breadcrumbs([['Inicio', '/'], ['Ferias por comuna', '/ferias/'], [`Ferias en ${comuna}`, path]])],
+    content: `
+      <h1>Ferias libres en ${h(comuna)}</h1>
+      <p>${h(region)}. Consulta las direcciones, días y horarios informados en ${records.length} registro${records.length === 1 ? '' : 's'} de ubicaciones de ferias en esta comuna.</p>
+      ${comuna === 'Santiago' ? '<p>Esta página corresponde a la comuna de Santiago, no a toda la Región Metropolitana.</p>' : ''}
+      <p class="notice">${coverageNote} <a href="/attribuciones.html#metodologia">Conoce la cobertura y las limitaciones</a>.</p>
+      <p><a class="cta" href="${h(mapLink(comuna))}">Ver mapa de ferias en ${h(comuna)}</a></p>
+      <ul class="market-cards">${cards}</ul>
+      ${related ? `<section><h2>Más comunas de la misma región</h2><ul class="commune-links">${related}</ul></section>` : ''}
+      <p><a href="/ferias/">Ver todas las comunas disponibles</a></p>`
+  });
 }
-
-function main() {
-  const raw = readFileSync(GEOJSON_PATH, 'utf8');
-  const geojson = JSON.parse(raw);
-  const features = geojson.features || [];
-
-  const byComuna = new Map();
-  for (const f of features) {
-    const comuna = getCommune(f);
-    if (!comuna) continue;
-    if (!byComuna.has(comuna)) byComuna.set(comuna, []);
-    byComuna.get(comuna).push(f);
-  }
-
-  const comunas = Array.from(byComuna.keys()).sort((a, b) => a.localeCompare(b, 'es'));
-  console.log(`Generating ${comunas.length} city pages...`);
-
-  for (const comuna of comunas) {
-    const slug = slugify(comuna);
-    if (!slug) continue;
-    const ferias = byComuna.get(comuna);
-    const dir = join(PUBLIC_DIR, 'ferias-en-' + slug);
-    mkdirSync(dir, { recursive: true });
-    const html = buildCityPage(comuna, slug, ferias);
-    writeFileSync(join(dir, 'index.html'), html, 'utf8');
-    console.log(`  ferias-en-${slug}/ (${ferias.length} ferias)`);
-  }
-
-  // Ferias index page: list all comunas with links to city pages
-  const feriasIndexDir = join(PUBLIC_DIR, 'ferias');
-  mkdirSync(feriasIndexDir, { recursive: true });
-  const indexTitle = 'Ferias por comuna | DóndeHayFeria';
-  const indexDesc = 'Lista de ferias libres por comuna en Chile. Santiago, Rancagua, La Reina y más. Ver días y horarios en cada comuna o en el mapa.';
-  const indexLinks = comunas
-    .map((c) => {
-      const s = slugify(c);
-      const count = byComuna.get(c).length;
-      return `      <li><a href="/ferias-en-${s}/">Ferias en ${escapeHtml(c)}</a> (${count})</li>`;
-    })
-    .join('\n');
-  const feriasIndexHtml = `<!doctype html>
-<html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <title>${escapeHtml(indexTitle)}</title>
-    <meta name="description" content="${escapeHtml(indexDesc)}" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="canonical" href="${BASE_URL}/ferias/" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <!-- Google Analytics (GA4) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', '${GA_MEASUREMENT_ID}');
-    </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet" />
-    <style>
-      * { box-sizing: border-box; }
-      body { font-family: 'Atkinson Hyperlegible', sans-serif; margin: 0; padding: 1rem 1.5rem; max-width: 48rem; margin-left: auto; margin-right: auto; line-height: 1.5; color: #1e293b; background: #EDE7D6; }
-      a { color: #0d9488; }
-      a:hover { text-decoration: underline; }
-      h1 { font-size: 1.5rem; margin-top: 0; }
-      ul { padding-left: 1.5rem; }
-      .nav { margin-bottom: 1.5rem; }
-      .cta { display: inline-block; margin-top: 1rem; padding: 0.5rem 1rem; background: #60867D; color: white; border-radius: 0.5rem; text-decoration: none; font-weight: 700; }
-      .cta:hover { background: #4d6b63; }
-    </style>
-  </head>
-  <body>
-    <nav class="nav" aria-label="Navegación">
-      <a href="/">Inicio</a>
-    </nav>
-    <main>
-      <h1>Ferias por comuna</h1>
-      <p>Elige una comuna para ver la lista de ferias libres con días y horarios.</p>
-      <ul>
-${indexLinks}
-      </ul>
-      <p><a href="/" class="cta">Ver mapa interactivo</a></p>
-    </main>
-    <footer style="margin-top: 2rem; font-size: 0.875rem; color: #64748b;">
-      <a href="/attribuciones.html">Atribuciones y créditos</a>
-    </footer>
-  </body>
-</html>
-`;
-  writeFileSync(join(feriasIndexDir, 'index.html'), feriasIndexHtml, 'utf8');
-  console.log('  ferias/ (index)');
-
-  console.log('Done.');
+for (const [comuna, ferias] of comunas) {
+  const dir = join(PUBLIC_DIR, cityPath(comuna));
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(join(dir, 'index.html'), buildCityPage(comuna, ferias), 'utf8');
 }
-
-main();
+const regions = new Map();
+for (const [comuna, features] of comunas) {
+  const region = String(features[0].properties?.region ?? 'Región sin informar');
+  if (!regions.has(region)) regions.set(region, []);
+  regions.get(region).push(comuna);
+}
+const directory = [...regions].sort(([a], [b]) => a.localeCompare(b, 'es')).map(([region, names]) => `
+  <section><h2>${h(region)}</h2><ul class="commune-links">${names.map(comuna => `<li><a href="${cityPath(comuna)}">Ferias en ${h(comuna)}</a></li>`).join('')}</ul></section>`).join('');
+mkdirSync(join(PUBLIC_DIR, 'ferias'), { recursive: true });
+writeFileSync(join(PUBLIC_DIR, 'ferias/index.html'), documentHtml({
+  title: 'Ferias libres por comuna en Chile: días y direcciones | DóndeHayFeria',
+  description: 'Busca ferias libres por región y comuna en Chile. Consulta direcciones, días y horarios informados y abre cada feria en el mapa.',
+  path: '/ferias/',
+  structuredData: [breadcrumbs([['Inicio', '/'], ['Ferias por comuna', '/ferias/']])],
+  content: `<h1>Ferias libres por comuna en Chile</h1>
+    <p>Elige una de las ${comunas.length} comunas con registros disponibles para consultar ubicaciones, días y horarios informados.</p>
+    <p class="notice">${coverageNote}</p>${directory}`
+}), 'utf8');
+console.log(`Generated ${comunas.length} comuna pages and the regional directory.`);
